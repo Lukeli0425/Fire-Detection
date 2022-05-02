@@ -11,7 +11,6 @@ if __name__ == '__main__':
     batch_size = 8
     transform = transforms.Compose([transforms.ToPILImage(),
                                     transforms.RandomHorizontalFlip(),
-                                    # transforms.RandomRotation(15),
                                     transforms.ToTensor()
                                     ])
     train_dataset = BoWFireDataset(transform=transform)
