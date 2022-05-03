@@ -11,8 +11,9 @@ def test(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/datase
     model = torch.load(model_path)
     model.eval()
     test_images = os.listdir(data_path)
-    test_images.remove('.DS_Store')
-    random.shuffle( test_images)
+    if '.DS_Store' in test_images:
+        test_images.remove('.DS_Store')
+    random.shuffle(test_images)
 
     transform = transforms.ToTensor()
 
