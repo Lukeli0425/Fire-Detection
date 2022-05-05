@@ -19,6 +19,10 @@ Superpixel特征提取:LBP特征
 
 https://www.jianshu.com/p/039df67c2d5f
 
+SVM训练：
+
+https://www.jianshu.com/p/039df67c2d5f
+
 训练：
 
 `CNN-1`
