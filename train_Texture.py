@@ -11,6 +11,8 @@ from skimage.segmentation import mark_boundaries
 from sklearn.decomposition import PCA
 from skimage.feature import local_binary_pattern
 from skimage.color import rgb2gray
+from sklearn.externals import joblib
+from sklearn.neighbors import KNeighborsRegressor
 
 def loadPicture(dataset_path = 'BoWFireDataset/train/'):
     images = []
@@ -25,7 +27,7 @@ def loadPicture(dataset_path = 'BoWFireDataset/train/'):
         elif image_name[0] == 's':
             train_label.append('s')
     return images,train_label
-        
+    
 def Extract_LBP_Feature(image,radius=1,n_points=8):
     # LBP特征提取
     # radius = 1  # LBP算法中范围半径的取值
@@ -64,5 +66,33 @@ def train(dataset_path = 'BoWFireDataset/train/',radius=1,n_points=8):
     np.save('smoke_feature.npy',smoke_feature)
     np.save('normal_feature.npy',normal_feature)
     
+def trainKNN(dataset_path = 'BoWFireDataset/train/',radius=1,n_points=8):
+    fire_num = 0
+    smoke_num = 0
+    normal_num = 0
+    # fire_feature = np.zeros((256))
+    # smoke_feature = np.zeros((256))
+    # normal_feature = np.zeros((256))
+    X = []
+    Y = []
+    # Y 0:fire 1:smoke 2:normal   
+    images,train_label = loadPicture(dataset_path=dataset_path)
+    print("Begin training KNN......")
+    for idx in range(len(images)):
+        print('training KNN:%s/%s'%(idx,len(images)))
+        image = images[idx]
+        label = train_label[idx]
+        X.append(Extract_LBP_Feature(image,radius=radius,n_points=n_points))
+        if label == 'f':
+            Y.append(0)
+        elif label == 's':
+            Y.append(1)
+        elif label == 'n':
+            Y.append(2)
+    model = KNeighborsRegressor(n_neighbors=3)
+    model.fit(X, Y)
+    joblib.dump(model,'Texture_KNN.pickle')
+
 if __name__ == "__main__":
-    train(dataset_path='BoWFireDataset/train/')
+    # train(dataset_path='BoWFireDataset/train/')
+    trainKNN(dataset_path='../BoWFireDataset/train/')
