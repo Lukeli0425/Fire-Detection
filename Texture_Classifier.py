@@ -1,5 +1,8 @@
 # coding=utf-8
 # 导入相应的python包
+from logging import raiseExceptions
+from pdb import Pdb
+from cv2 import randShuffle
 import numpy as np
 from distutils.ccompiler import new_compiler
 from skimage import io
@@ -33,9 +36,10 @@ class Texture_Classfier:
 
     def Superpixel(self,sigma = 5):
         # segments map
-        segments = slic(self.image, n_segments=self.n_segments, sigma=5)
+        segments = slic(self.image, n_segments=self.n_segments, sigma=5)  
         # num of superpixels
-        SP_num = len(np.unique(segments))
+        SP_num = np.unique(segments).tolist()
+        print('察看所有列表元素:',SP_num)
         return segments,SP_num
 
     def generate_mask(self):
@@ -46,7 +50,7 @@ class Texture_Classfier:
         cnt = 0
         model = joblib.load('Texture_KNN.pickle')
 
-        for idx in range(SP_num):
+        for idx in SP_num:
             # shape (1,n) n is the size of superpixel
             superpixel = self.LBP_image[segments==idx]
             max_bins = 256
@@ -64,7 +68,7 @@ class Texture_Classfier:
         return mask
 
 if __name__ == "__main__":
-    image_path = '/Volumes/Samsung_T5/数字图像处理大作业/BoWFireDataset/dataset/img/not_fire044.png'
+    image_path = '/Volumes/Samsung_T5/数字图像处理大作业/BoWFireDataset/dataset/img/not_fire042.png'
     fire_feature = np.load('fire_feature.npy')
     smoke_feature = np.load('smoke_feature.npy')
     normal_feature = np.load('normal_feature.npy')
