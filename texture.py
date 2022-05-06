@@ -9,7 +9,7 @@ from skimage.feature import local_binary_pattern
 from skimage.color import rgb2gray
 import joblib
 from train_Texture import Extract_LBP_Feature
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsClassifier
 
 def loadPicture(dataset_path='./BoWFireDataset/train/'):
     images = []
@@ -18,12 +18,12 @@ def loadPicture(dataset_path='./BoWFireDataset/train/'):
     for image_name in image_paths:
         images.append(img_as_float(io.imread(dataset_path+image_name)))
         if image_name[0] == 'f':
-            train_label.append('f')
+            train_label.append(2)
         elif image_name[0] == 'n':
-            train_label.append('n')
+            train_label.append(0)
         elif image_name[0] == 's':
-            train_label.append('s')
-    return images,train_label
+            train_label.append(1)
+    return images, train_label
     
 def Extract_LBP_Feature(image, radius=1, n_points=8):
     # LBP特征提取
@@ -37,81 +37,116 @@ def Extract_LBP_Feature(image, radius=1, n_points=8):
 
 # Texture_Classfier模型
 class Texture_Classfier:
-    def __init__(self, n_segments=5, dataset_path='./BoWFireDataset/train/'):
+    def __init__(self, n_segments=150, dataset_path='./BoWFireDataset/train/', n_neighbors=11):
         # params
         self.n_points = 8
         self.radius = 1
         self.n_segments = n_segments
         self.dataset_path = dataset_path
+        self.n_neighbors = n_neighbors
+        self.model = joblib.load('./models/Texture_KNN.model')
 
     def LBP(self):
         image_gray = rgb2gray(self.image)
-        lbp = local_binary_pattern(image_gray,self.n_points,self.radius)
+        lbp = local_binary_pattern(image_gray, self.n_points, self.radius)
         self.LBP_image = lbp
 
     def Superpixel(self, sigma=5):
         # segments map
-        segments = slic(self.image, n_segments=self.n_segments, sigma=5)  
+        segments = slic(self.image, n_segments=self.n_segments, compactness=40)  
         # num of superpixels
         SP_num = np.unique(segments).tolist()
 
         return segments,SP_num
 
     def train(self, radius=1, n_points=8):
+        self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors)
         X = []
-        Y = []
-        # Y 0:fire 1:smoke 2:normal   
-        images,train_label = loadPicture(dataset_path=self.dataset_path)
+        images, train_label = loadPicture(dataset_path=self.dataset_path)
         print("Training Texture KNN...")
+        Y = np.array(train_label)
         for idx in range(len(images)):
             image = images[idx]
-            label = train_label[idx]
             X.append(Extract_LBP_Feature(image,radius=radius,n_points=n_points))
-            if label == 'f':
-                Y.append(0)
-            elif label == 's':
-                Y.append(1)
-            elif label == 'n':
-                Y.append(2)
-        model = KNeighborsRegressor(n_neighbors=15)
-        model.fit(X, Y)
-        joblib.dump(model,'./models/Texture_KNN.model')
+        
+        self.model.fit(X, Y)
+        joblib.dump(self.model,'./models/Texture_KNN.model')
 
     def get_mask(self, image):
         self.image = image
         self.LBP()
         mask = np.zeros(self.image.shape)
-        segments,SP_num = self.Superpixel()
+        segments, SP_num = self.Superpixel()
         self.segments = segments
         cnt = 0
-        model = joblib.load('./models/Texture_KNN.model')
 
         for idx in SP_num:
             # shape (1,n) n is the size of superpixel
             superpixel = self.LBP_image[segments==idx]
             max_bins = 256
             feature,_ = np.histogram(superpixel,bins=max_bins, range=(0, 255),density=True)
-            predict = model.predict(feature.reshape(1,-1))
-            if predict==0:
-                print('FFF')
+            predict = self.model.predict(feature.reshape(1,-1))
+            if predict[0]==2:
                 cnt += 1
                 mask[segments==idx] = 1
         return mask
 
+    def test(self, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
+        total_correct = 0
+        if not os.path.exists('./result/texture/'):
+            os.mkdir('./result/texture/')
+        test_images = os.listdir(data_path)
+        if '.DS_Store' in test_images:
+            test_images.remove('.DS_Store')
+
+        for img_name in test_images:
+            img_path = os.path.join(data_path, img_name)
+            img = io.imread(img_path)
+            h,w,_ = img.shape
+            mask = self.get_mask(img)
+            img_out = img * mask
+            img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
+            img_save_path = os.path.join('./result/texture/', img_out_name)
+            # io.imsave(img_save_path, img_out.astype(np.uint8))
+
+            plt.figure(figsize=(10,5))
+            plt.subplot(1,3,1)
+            plt.imshow(self.image.astype(np.uint8))
+            plt.title('Original Image')
+            plt.subplot(1,3,2)
+            plt.imshow((img * mask).astype(np.uint8))
+            plt.title('Texture Mask')
+            plt.subplot(1,3,3)
+            plt.imshow(mark_boundaries(TC.image, TC.segments))
+            plt.title('Segments')
+            plt.savefig(img_save_path)
+            plt.close()
+
+            is_fire = mask.sum()/h/w > fire_threshold
+            if img_name[0] == 'f' and is_fire:
+                total_correct += 1
+            elif img_name[0] == 'n' and (not is_fire):
+                total_correct += 1
+
+        acc = total_correct/len(test_images)
+        print('accuracy: {:.2f}'.format(acc))
+        return acc
+
 if __name__ == "__main__":
-    image_path = './BoWFireDataset/dataset/img/fire000.png'
-    TC = Texture_Classfier(n_segments=12)
+    image_path = './BoWFireDataset/dataset/img/fire033.png'
+    TC = Texture_Classfier(metric='manhattan')
     TC.train()
+    TC.test()
     img = img_as_float(io.imread(image_path))
     Mask = TC.get_mask(image=img)
-    plt.figure
-    plt.subplot(131)
-    plt.title('Fire Mask')
-    plt.imshow(Mask*img)
-    plt.subplot(132)
-    plt.title('image')
-    plt.imshow(TC.image)
-    plt.subplot(133)
-    plt.title('image and segments')
-    plt.imshow(mark_boundaries(TC.image, TC.segments))
-    plt.show()
+
+    # plt.subplot(131)
+    # plt.title('Fire Mask')
+    # plt.imshow(Mask*img)
+    # plt.subplot(132)
+    # plt.title('image')
+    # plt.imshow(TC.image)
+    # plt.subplot(133)
+    # plt.title('image and segments')
+    # plt.imshow(mark_boundaries(TC.image, TC.segments))
+    # plt.show()
