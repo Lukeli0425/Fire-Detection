@@ -27,6 +27,8 @@ if __name__ == '__main__':
         for idx, (train_x, train_label) in enumerate(train_loader):
             optimizer.zero_grad()
             predict_y = model(train_x.float())
+            print(train_label.shape)
+            print(predict_y.shape)
             loss = loss_fn(predict_y, train_label.long())
             loss.backward()
             optimizer.step()
