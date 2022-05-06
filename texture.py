@@ -37,7 +37,7 @@ def Extract_LBP_Feature(image, radius=1, n_points=8):
 
 # Texture_Classfier模型
 class Texture_Classfier:
-    def __init__(self, n_segments=100, dataset_path='./BoWFireDataset/train/', n_neighbors=11):
+    def __init__(self, n_segments=15, dataset_path='./BoWFireDataset/train/', n_neighbors=11):
         # params
         self.n_points = 8
         self.radius = 1
@@ -93,8 +93,8 @@ class Texture_Classfier:
 
     def test(self, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         total_correct = 0
-        if not os.path.exists('./result/texture/'):
-            os.mkdir('./result/texture/')
+        if not os.path.exists('./results/texture/'):
+            os.mkdir('./results/texture/')
         test_images = os.listdir(data_path)
         if '.DS_Store' in test_images:
             test_images.remove('.DS_Store')
@@ -106,7 +106,7 @@ class Texture_Classfier:
             mask = self.get_mask(img)
             img_out = img * mask
             img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
-            img_save_path = os.path.join('./result/texture/', img_out_name)
+            img_save_path = os.path.join('./results/texture/', img_out_name)
             # io.imsave(img_save_path, img_out.astype(np.uint8))
 
             plt.figure(figsize=(10,5))

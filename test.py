@@ -101,7 +101,7 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.005):
 
         truth.append(1 if is_fire else 0)
         predicted.append(1 if img_name[0] == 'f' else 0)
-        print('[{}/{}]'.format(idx, len(test_images)) + img_name + ('\t fire' if is_fire else '\t no fire'))
+        print('[{}/{}] '.format(idx, len(test_images)) + img_name + ('\tfire' if is_fire else '\tno fire'))
     
     truth = np.array(truth)
     predicted = np.array(predicted)
