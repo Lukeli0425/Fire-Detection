@@ -37,7 +37,7 @@ def Extract_LBP_Feature(image, radius=1, n_points=8):
 
 # Texture_Classfier模型
 class Texture_Classfier:
-    def __init__(self, n_segments=150, dataset_path='./BoWFireDataset/train/', n_neighbors=11):
+    def __init__(self, n_segments=100, dataset_path='./BoWFireDataset/train/', n_neighbors=11):
         # params
         self.n_points = 8
         self.radius = 1
@@ -60,7 +60,7 @@ class Texture_Classfier:
         return segments,SP_num
 
     def train(self, radius=1, n_points=8):
-        self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors)
+        self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, metric='manhattan')
         X = []
         images, train_label = loadPicture(dataset_path=self.dataset_path)
         print("Training Texture KNN...")
@@ -134,7 +134,7 @@ class Texture_Classfier:
 
 if __name__ == "__main__":
     image_path = './BoWFireDataset/dataset/img/fire033.png'
-    TC = Texture_Classfier(metric='manhattan')
+    TC = Texture_Classfier()
     TC.train()
     TC.test()
     img = img_as_float(io.imread(image_path))
