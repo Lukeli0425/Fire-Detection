@@ -52,6 +52,7 @@ class Texture_Classfier:
             max_bins = 256
             feature,_ = np.histogram(superpixel,bins=max_bins, range=(0, 255),density=True)
             predict = model.predict([feature])
+            print(feature)
             print("predict = ",predict)
             print("predict输入:",feature.shape)
             # L1,L2,L3 = np.linalg.norm(feature-self.fire_feature),np.linalg.norm(feature-self.smoke_feature),np.linalg.norm(feature-self.normal_feature)
@@ -63,7 +64,7 @@ class Texture_Classfier:
         return mask
 
 if __name__ == "__main__":
-    image_path = '/Volumes/Samsung_T5/数字图像处理大作业/BoWFireDataset/dataset/img/not_fire046.png'
+    image_path = '/Volumes/Samsung_T5/数字图像处理大作业/BoWFireDataset/dataset/img/not_fire044.png'
     fire_feature = np.load('fire_feature.npy')
     smoke_feature = np.load('smoke_feature.npy')
     normal_feature = np.load('normal_feature.npy')
