@@ -2,12 +2,8 @@ import os
 import skimage
 import numpy as np
 import random 
-import sklearn
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeClassifier
 import joblib
 
 def color_train(data_path='./BoWFireDataset/train/', n_neighbors=20, model_path='./models/Color_KNN.model'):

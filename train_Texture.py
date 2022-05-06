@@ -66,7 +66,7 @@ def Extract_LBP_Feature(image,radius=1,n_points=8):
 #     np.save('smoke_feature.npy',smoke_feature)
 #     np.save('normal_feature.npy',normal_feature)
     
-def trainKNN(dataset_path = 'BoWFireDataset/train/',radius=1,n_points=8):
+def trainKNN(dataset_path = './BoWFireDataset/train/',radius=1,n_points=8):
     fire_num = 0
     smoke_num = 0
     normal_num = 0

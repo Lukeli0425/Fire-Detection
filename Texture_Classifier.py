@@ -1,5 +1,3 @@
-# coding=utf-8
-# 导入相应的python包
 import numpy as np
 from distutils.ccompiler import new_compiler
 from skimage import io
@@ -10,8 +8,8 @@ from skimage.segmentation import mark_boundaries
 from skimage.feature import local_binary_pattern
 from skimage.color import rgb2gray
 from sklearn.externals import joblib
-from train_Texture import Extract_LBP_Feature
 from sklearn.neighbors import KNeighborsRegressor
+
 # Texture_Classfier模型
 class Texture_Classfier:
     def __init__(self,image_path,fire_feature,normal_feature,smoke_feature,n_segments):
@@ -31,7 +29,7 @@ class Texture_Classfier:
         lbp = local_binary_pattern(image_gray,self.n_points,self.radius)
         self.LBP_image = lbp
 
-    def Superpixel(self,sigma = 5):
+    def Superpixel(self, sigma=5):
         # segments map
         segments = slic(self.image, n_segments=self.n_segments, sigma=5)
         # num of superpixels
@@ -44,7 +42,7 @@ class Texture_Classfier:
         segments,SP_num = self.Superpixel()
         self.segments = segments
         cnt = 0
-        model = joblib.load('Texture_KNN.pickle')
+        model = joblib.load('Texture_KNN.model')
 
         for idx in range(SP_num):
             # shape (1,n) n is the size of superpixel
