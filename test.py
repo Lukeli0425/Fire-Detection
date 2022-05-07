@@ -53,13 +53,15 @@ def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/da
     acc = total_correct/len(test_images)
     print('accuracy: {:.2f}'.format(acc))
     
-def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.005):
-    CC = Color_Classifier()
+def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
+    CC = Color_Classifier(n_neighbors=11)
     CC.train()
-    TC = Texture_Classfier()
+    TC = Texture_Classfier(n_neighbors=11, method='nri_uniform', n_segments=70, max_bins=64, m=40)
     TC.train()
 
     test_images = os.listdir(data_path)
+    test_images.sort()
+    # test_images.reverse()
     if '.DS_Store' in test_images:
         test_images.remove('.DS_Store')
     # random.shuffle(test_images) 
@@ -81,7 +83,7 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.005):
         img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
         img_save_path = os.path.join('./results/combined/', img_out_name)
         # io.imsave(img_save_path, img_out.astype(np.uint8))
-        is_fire = mask.sum() > 300
+        is_fire = mask.sum()/h/w > fire_threshold
 
         plt.figure(figsize=(10,8))
         plt.subplot(2,2,1)
@@ -101,14 +103,14 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.005):
 
         truth.append(1 if is_fire else 0)
         predicted.append(1 if img_name[0] == 'f' else 0)
-        print('[{}/{}] '.format(idx, len(test_images)) + img_name + ('\tfire' if is_fire else '\tno fire'))
+        print('[{}/{}]  '.format(idx, len(test_images)) + img_name + ('  fire' if is_fire else '  not fire'))
     
     truth = np.array(truth)
     predicted = np.array(predicted)
     sns.set()
     f,ax = plt.subplots()
     cm = confusion_matrix(truth, predicted)
-    cm = pd.DataFrame(cm,columns=["no fire", "fire"],index=["no fire", "fire"])
+    cm = pd.DataFrame(cm,columns=["not fire", "fire"],index=["not fire", "fire"])
     sns.heatmap(cm,cmap="YlGnBu_r",fmt="d",annot=True)
     plt.show()
     
