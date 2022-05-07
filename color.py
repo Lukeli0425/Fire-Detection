@@ -3,29 +3,36 @@ import skimage
 import numpy as np
 import random 
 import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from skimage.color import convert_colorspace
 import joblib
 
 class Color_Classifier:
-    def __init__(self, dataset_path='./BoWFireDataset/train/', model_path='./models/Color_KNN.model', n_neighbors=11):
+    def __init__(self, 
+                 dataset_path='./BoWFireDataset/train/', 
+                 model_path='./models/Color_Bayes.model', 
+                 n_neighbors=11):
+
         self.dataset_path = dataset_path
         self.model_path = model_path
         self.n_neighbors = n_neighbors
         self.model = joblib.load(self.model_path)
 
     def train(self):
-        self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, metric='manhattan')
+        # self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, metric='manhattan')
+        self.model = GaussianNB()
         train_images = os.listdir(self.dataset_path)
         if '.DS_Store' in train_images:
             train_images.remove('.DS_Store')
         X = [] # pixels
         Y = [] # labels
-        print("Training Color KNN...")
+        print("Training Color Bayes...")
         for img_name in train_images:
             img_path = os.path.join(self.dataset_path, img_name)
             img = skimage.io.imread(img_path)
             h,w,_ = img.shape
-            img_ycbcr = skimage.color.convert_colorspace(img, 'rgb', 'ycbcr')
+            img_ycbcr = convert_colorspace(img, 'rgb', 'ycbcr')
 
             for i in range(0,h):
                 for j in range(0,w):
@@ -36,6 +43,7 @@ class Color_Classifier:
                         Y.append(1)
                     else:
                         Y.append(0)
+
         X = np.array(X)
         Y = np.array(Y)
         
@@ -66,7 +74,9 @@ class Color_Classifier:
             test_images.remove('.DS_Store')
         random.shuffle(test_images)
 
+        idx = 0
         for img_name in test_images:
+            idx += 1
             img_path = os.path.join(data_path, img_name)
             img = skimage.io.imread(img_path)
             h,w,_ = img.shape
@@ -81,6 +91,7 @@ class Color_Classifier:
                 total_correct += 1
             elif img_name[0] == 'n' and (not is_fire):
                 total_correct += 1
+            print('[{}/{}]  '.format(idx, len(test_images)) + img_name + ('  fire' if is_fire else '  not fire'))
 
         acc = total_correct/len(test_images)
         print('accuracy: {:.2f}'.format(acc))
