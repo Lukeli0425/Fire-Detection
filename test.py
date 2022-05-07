@@ -56,12 +56,12 @@ def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/da
 def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
     CC = Color_Classifier(n_neighbors=11)
     CC.train()
-    TC = Texture_Classfier(n_neighbors=11, method='nri_uniform', n_segments=70, max_bins=64, m=40)
+    TC = Texture_Classfier(n_neighbors=11, method='ror', n_segments=150, max_bins=64, m=40)
     TC.train()
 
     test_images = os.listdir(data_path)
     test_images.sort()
-    # test_images.reverse()
+    test_images.reverse()
     if '.DS_Store' in test_images:
         test_images.remove('.DS_Store')
     # random.shuffle(test_images) 
