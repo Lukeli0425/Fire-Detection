@@ -31,6 +31,13 @@ https://www.jianshu.com/p/039df67c2d5f
 
 `CNN-3`
 
+用到的额外训练数据集:
+
+第一级网络：Reviewer的训练
+
+https://www.kaggle.com/datasets/phylake1337/fire-dataset
+
+
 ……
 
 `CNN-n`
