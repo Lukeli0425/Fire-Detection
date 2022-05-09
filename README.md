@@ -57,5 +57,5 @@ https://www.kaggle.com/datasets/phylake1337/fire-dataset
 5月21日：检查上述有无缺漏
 
 
-
+`注：`代码实验中的可视化程序代码尽量不要整合时删除，争取保留下来，之后报告可以多放一些图
 
