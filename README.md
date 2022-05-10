@@ -31,6 +31,13 @@ https://www.jianshu.com/p/039df67c2d5f
 
 `CNN-3`
 
+用到的额外训练数据集:
+
+第一级网络：Reviewer的训练
+
+https://www.kaggle.com/datasets/phylake1337/fire-dataset
+
+
 ……
 
 `CNN-n`
@@ -38,4 +45,17 @@ https://www.jianshu.com/p/039df67c2d5f
 `Pixel-Texture-Net`
 
 ++ Adaboost集成
+
+
+
+5月9日-5月13日：调试第一级CNN网络，第二级准备设计四五个小型LeNet CNN 分类器 + Color/Texture分类器---->得到90%以上的分类准确率即可
+
+5月13日-5月15日：代码整合，在最后一级加入Color/Texture分割框架结果Mask，得到火焰所在位置Mask，整个框架输出01分类结果及Mask(0直接输出全黑图，1输出黑白图标记火焰位置)
+
+5月15日-5月20日：代码整理，Readme文档编写，代码运行环境整理，预训练模型整理，数据集整理，Github代码整理，实验报告编写完成---->提交
+
+5月21日：检查上述有无缺漏
+
+
+`注：`代码实验中的可视化程序代码尽量不要整合时删除，争取保留下来，之后报告可以多放一些图
 
