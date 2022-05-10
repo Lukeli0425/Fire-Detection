@@ -18,7 +18,7 @@ if __name__ == '__main__':
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     model = CNN()
-    optimizer = Adam(model.parameters(), lr=5e-4, weight_decay=0.0)#,  momentum=0.9)#)#)
+    optimizer = Adam(model.parameters(), lr=5e-4, weight_decay=0.1)#,  momentum=0.9)#)#)
     loss_fn = CrossEntropyLoss()
     all_epoch = 100
 
@@ -43,5 +43,5 @@ if __name__ == '__main__':
             all_sample_num += current_correct_num.shape[0]
             all_loss += loss_fn(predict_y, test_label.long()).sum()
         acc = all_correct_num / all_sample_num
-        print('[{}/{}] loss: {:.2f}  accuracy: {:.2f}'.format(current_epoch, all_epoch, all_loss, acc))
+        print('[{}/{}] loss: {:.2f}  accuracy: {:.2f}'.format(current_epoch+1, all_epoch, all_loss, acc))
         torch.save(model, 'models/fire_{:.2f}.pkl'.format(acc))

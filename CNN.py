@@ -11,13 +11,13 @@ class CNN(nn.Module):
             nn.MaxPool2d(2) # 6*24*24
         )
         self.conv2 = nn.Sequential(
-            nn.Conv2d(8, 16, 5), # 12*20*20
-            nn.BatchNorm2d(16),
+            nn.Conv2d(8, 32, 5), # 12*20*20
+            nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(2) # 12*10*10
         )
         self.conv3 = nn.Sequential(
-            nn.Conv2d(16, 32, 3), # 64*8*8
+            nn.Conv2d(32, 32, 3), # 64*8*8
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(2) # 32*4*4
