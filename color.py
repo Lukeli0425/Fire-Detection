@@ -55,7 +55,7 @@ class Color_Classifier:
         """Generate fire mask of the input image with the saved KNN model trained by colar space mathod."""
 
         h,w,_ = img.shape
-        img_ycbcr = skimage.color.convert_colorspace(img, 'rgb', 'ycbcr')
+        img_ycbcr = convert_colorspace(img, 'rgb', 'ycbcr')
         prds = np.array(self.model.predict(img_ycbcr.reshape(-1,3)))
         mask = prds.reshape(h,w)
         mask = np.array(mask/2, dtype=int)
@@ -70,9 +70,10 @@ class Color_Classifier:
         if not os.path.exists('./results/color/'):
             os.mkdir('./results/color/')
         test_images = os.listdir(data_path)
+        test_images.sort()
         if '.DS_Store' in test_images:
             test_images.remove('.DS_Store')
-        random.shuffle(test_images)
+        # random.shuffle(test_images)
 
         idx = 0
         for img_name in test_images:
@@ -81,7 +82,9 @@ class Color_Classifier:
             img = skimage.io.imread(img_path)
             h,w,_ = img.shape
             mask = self.get_mask(img)
-            img_out = img * mask
+            # img_out = img * mask
+            img_out = img
+            img_out[mask==0] = 0
             img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
             img_save_path = os.path.join('./results/color/', img_out_name)
             skimage.io.imsave(img_save_path, img_out.astype(np.uint8))

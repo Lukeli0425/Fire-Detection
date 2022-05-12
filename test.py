@@ -56,12 +56,12 @@ def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/da
 def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
     CC = Color_Classifier(n_neighbors=11)
     CC.train()
-    TC = Texture_Classfier(n_neighbors=11, method='ror', n_segments=150, max_bins=64, m=40)
+    TC = Texture_Classfier(n_neighbors=11, method='default', n_segments=100, max_bins=64, m=40)
     TC.train()
 
     test_images = os.listdir(data_path)
     test_images.sort()
-    test_images.reverse()
+    # test_images.reverse()
     if '.DS_Store' in test_images:
         test_images.remove('.DS_Store')
     # random.shuffle(test_images) 
@@ -76,10 +76,11 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         img_path = os.path.join(data_path, img_name)
         img = io.imread(img_path)
         h,w,_ = img.shape
-        color_mask = CC.get_mask(img)
+        # color_mask = CC.get_mask(img)
+        # img_color = img * color_mask
         texture_mask = TC.get_mask(img)
-        mask = texture_mask * color_mask
-        img_out = img * mask
+        mask = texture_mask #* color_mask
+        img_out = img * texture_mask
         img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
         img_save_path = os.path.join('./results/combined/', img_out_name)
         # io.imsave(img_save_path, img_out.astype(np.uint8))
@@ -90,14 +91,14 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         plt.imshow(img.astype(np.uint8))
         plt.title('Original Image')
         plt.subplot(2,2,2)
-        plt.imshow((img * color_mask).astype(np.uint8))
+        plt.imshow((img ).astype(np.uint8))
         plt.title('Color Mask')
         plt.subplot(2,2,3)
         plt.imshow((img * texture_mask).astype(np.uint8))
         plt.title('Texture Mask')
         plt.subplot(2,2,4)
         plt.imshow(img_out.astype(np.uint8))
-        plt.title('Fire Mask')
+        plt.title('Fire Mask' + (' fire' if is_fire else ' not fire'))
         plt.savefig(img_save_path)
         plt.close()
 
@@ -119,4 +120,4 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
 
 if __name__ == "__main__":
-    test()
+    test(data_path='./results/color/')

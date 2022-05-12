@@ -27,11 +27,11 @@ def loadPicture(dataset_path='./BoWFireDataset/train/'):
 def Extract_LBP_Feature(image, radius=1, n_points=8, max_bins=32, method='default'):
     # LBP特征提取
     # radius = 1  # LBP算法中范围半径的取值
-    # n_points = 8 * radius # 领域像素点数
+    n_points = 8 * radius # 领域像素点数
     img_ycbcr = convert_colorspace(image, 'rgb', 'ycbcr')
     image_gray = rgb2gray(img_ycbcr)
     lbp = local_binary_pattern(image_gray, n_points, radius, method=method)
-    feature, _ = np.histogram(lbp,bins=max_bins, range=(0, 255),density=True)
+    feature, _ = np.histogram(lbp,bins=max_bins, range=(0, 255), density=True)
     return feature
 
 # Texture_Classfier模型
@@ -99,11 +99,12 @@ class Texture_Classfier:
                 mask[segments==idx] = 1
         return mask
 
-    def test(self, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
+    def test(self, data_path, fire_threshold=0.01):
         total_correct = 0
         if not os.path.exists('./results/texture/'):
             os.mkdir('./results/texture/')
         test_images = os.listdir(data_path)
+        test_images.sort()
         if '.DS_Store' in test_images:
             test_images.remove('.DS_Store')
 
@@ -127,7 +128,7 @@ class Texture_Classfier:
             plt.imshow(img_out.astype(np.uint8))
             plt.title('Texture Mask')
             plt.subplot(1,3,3)
-            plt.imshow(mark_boundaries(TC.image, TC.segments))
+            plt.imshow(mark_boundaries(TC.image, TC.segments).astype(np.uint8))
             plt.title('Segments')
             plt.savefig(img_save_path)
             plt.close()
@@ -144,10 +145,11 @@ class Texture_Classfier:
         return acc
 
 if __name__ == "__main__":
-    image_path = './BoWFireDataset/dataset/img/fire033.png'
+    # image_path = './BoWFireDataset/dataset/img/fire033.png'
+    image_path = "./results/color/"
     TC = Texture_Classfier()
     TC.train()
-    TC.test()
+    TC.test(data_path=image_path)
     img = img_as_float(io.imread(image_path))
     Mask = TC.get_mask(image=img)
 
