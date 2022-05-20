@@ -24,14 +24,15 @@ def loadPicture(dataset_path='./BoWFireDataset/train/'):
             train_label.append(1)
     return images, train_label
     
-def Extract_LBP_Feature(image, radius=1, n_points=8, max_bins=32, method='default'):
+def Extract_LBP_Feature(image, radius=1, n_points=8, max_bins=255, method='default'):
     # LBP特征提取
     # radius = 1  # LBP算法中范围半径的取值
     n_points = 8 * radius # 领域像素点数
-    img_ycbcr = convert_colorspace(image, 'rgb', 'ycbcr')
-    image_gray = rgb2gray(img_ycbcr)
+    image_gray = rgb2gray(image)
     lbp = local_binary_pattern(image_gray, n_points, radius, method=method)
     feature, _ = np.histogram(lbp,bins=max_bins, range=(0, 255), density=True)
+    # print('debug here:',feature.sum())
+    # assert 1==0
     return feature
 
 # Texture_Classfier模型
@@ -82,7 +83,7 @@ class Texture_Classfier:
         joblib.dump(self.model,'./models/Texture_KNN.model')
 
     def get_mask(self, image):
-        self.image = convert_colorspace(image, 'rgb', 'ycbcr')
+        self.image =image
         self.LBP()
         mask = np.zeros(self.image.shape)
         segments, SP_num = self.Superpixel()
