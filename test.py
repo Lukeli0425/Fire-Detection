@@ -5,6 +5,7 @@ import torch, cv2
 from CNN import CNN
 import random
 from skimage import io
+from skimage.util import img_as_float
 from torchvision import transforms
 from color import Color_Classifier
 from texture import Texture_Classfier
@@ -59,7 +60,7 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
     CC = Color_Classifier(n_neighbors=7)
     CC.train()
-    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=120, max_bins=255, m=40)
+    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=130, max_bins=255, m=40)
     TC.train()
     SC = ColorSpace_Classfier()
     SC.train()
@@ -78,12 +79,13 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
     for img_name in test_images:
         idx += 1
         img_path = os.path.join(data_path, img_name)
-        img = io.imread(img_path)
+        img = img_as_float(io.imread(img_path))
         img0 = img
         h,w,_ = img.shape
 
         color_mask = CC.get_mask(img)
         img_color = img * color_mask
+        # img_color = img
         space_mask = SC.get_mask(img_color)
         img_space = img_color * space_mask
         texture_mask = TC.get_mask(img_space)
@@ -113,16 +115,16 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
         plt.figure(figsize=(10,8))
         plt.subplot(2,2,1)
-        plt.imshow(img0.astype(np.uint8))
+        plt.imshow(img0)
         plt.title('Original Image')
         plt.subplot(2,2,2)
-        plt.imshow((img_color).astype(np.uint8))
+        plt.imshow(img_color)
         plt.title('Color Mask')
         plt.subplot(2,2,3)
-        plt.imshow((img_texture).astype(np.uint8))
+        plt.imshow(img_texture)
         plt.title('Texture Mask')
         plt.subplot(2,2,4)
-        plt.imshow(img_out.astype(np.uint8))
+        plt.imshow(img_out)
         plt.title('Fire Mask' + (' fire' if is_fire else ' not fire'))
         plt.savefig(img_save_path)
         plt.close()
