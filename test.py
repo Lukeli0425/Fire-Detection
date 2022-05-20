@@ -1,3 +1,4 @@
+from http.client import ImproperConnectionState
 import os
 import numpy as np
 import torch, cv2
@@ -7,6 +8,7 @@ from skimage import io
 from torchvision import transforms
 from color import Color_Classifier
 from texture import Texture_Classfier
+from space import ColorSpace_Classfier
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
@@ -54,11 +56,13 @@ def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/da
     print('accuracy: {:.2f}'.format(acc))
     
 def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
-    CC = Color_Classifier(n_neighbors=11)
-    CC.train()
-    TC = Texture_Classfier(n_neighbors=11, method='default', n_segments=100, max_bins=64, m=40)
-    TC.train()
 
+    CC = Color_Classifier(n_neighbors=7)
+    CC.train()
+    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=120, max_bins=255, m=40)
+    TC.train()
+    SC = ColorSpace_Classfier()
+    SC.train()
     test_images = os.listdir(data_path)
     test_images.sort()
     # test_images.reverse()
@@ -75,26 +79,47 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         idx += 1
         img_path = os.path.join(data_path, img_name)
         img = io.imread(img_path)
+        img0 = img
         h,w,_ = img.shape
-        # color_mask = CC.get_mask(img)
-        # img_color = img * color_mask
-        texture_mask = TC.get_mask(img)
+
+        color_mask = CC.get_mask(img)
+        img_color = img * color_mask
+        space_mask = SC.get_mask(img_color)
+        img_space = img_color * space_mask
+        texture_mask = TC.get_mask(img_space)
         mask = texture_mask #* color_mask
-        img_out = img * texture_mask
+        img_texture = img_space * texture_mask
+        
+        img_out = img_texture
+        
+        
+
+        # texture_mask = TC.get_mask(img)
+        # img_texture = img * texture_mask
+        # color_mask = CC.get_mask(img_texture)
+        # print(color_mask.max())
+        # mask = color_mask
+        # print('debug1:',img.sum())
+        # img_color = img*color_mask
+        # print('debug2:',img_color.sum())
+        # img_out = img * texture_mask * color_mask
+
+
         img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
         img_save_path = os.path.join('./results/combined/', img_out_name)
         # io.imsave(img_save_path, img_out.astype(np.uint8))
+        # Trick:对于
         is_fire = mask.sum()/h/w > fire_threshold
 
         plt.figure(figsize=(10,8))
         plt.subplot(2,2,1)
-        plt.imshow(img.astype(np.uint8))
+        plt.imshow(img0.astype(np.uint8))
         plt.title('Original Image')
         plt.subplot(2,2,2)
-        plt.imshow((img ).astype(np.uint8))
+        plt.imshow((img_color).astype(np.uint8))
         plt.title('Color Mask')
         plt.subplot(2,2,3)
-        plt.imshow((img * texture_mask).astype(np.uint8))
+        plt.imshow((img_texture).astype(np.uint8))
         plt.title('Texture Mask')
         plt.subplot(2,2,4)
         plt.imshow(img_out.astype(np.uint8))
@@ -120,4 +145,4 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
 
 if __name__ == "__main__":
-    test(data_path='./results/color/')
+    test(data_path='./BoWFireDataset/dataset/img/')
