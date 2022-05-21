@@ -60,7 +60,7 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
     CC = Color_Classifier(n_neighbors=7)
     CC.train()
-    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=130, max_bins=255, m=40)
+    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=120, max_bins=255, m=40)
     TC.train()
     SC = ColorComponent_Classfier()
     SC.train()
