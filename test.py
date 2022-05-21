@@ -9,7 +9,7 @@ from skimage.util import img_as_float
 from torchvision import transforms
 from color import Color_Classifier
 from texture import Texture_Classfier
-from space import ColorSpace_Classfier
+from component import ColorComponent_Classfier
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
@@ -62,7 +62,7 @@ def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
     CC.train()
     TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=130, max_bins=255, m=40)
     TC.train()
-    SC = ColorSpace_Classfier()
+    SC = ColorComponent_Classfier()
     SC.train()
     test_images = os.listdir(data_path)
     test_images.sort()
