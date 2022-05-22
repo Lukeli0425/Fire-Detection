@@ -2,6 +2,10 @@
 
 This is a `non-deep learning` **fire detection** pipeline inspired by this [paper](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: `color space classifier`, `color component classifier` and` texture classifier`. Our model was trained and tested on the [BoWFire Dataset](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
 
+## Pipline
+
+[![OxD1l6.png](https://s1.ax1x.com/2022/05/22/OxD1l6.png)](https://imgtu.com/i/OxD1l6)
+
 ## Environment Setup
 
 Install the required packages for this repo:
@@ -41,6 +45,5 @@ train.py                      # train the model
 test.py                       # test the model
 run.sh                        # train and test the model together
 ```
-
 
 #### 
