@@ -6,7 +6,7 @@ from skimage.segmentation import slic
 from skimage.util import img_as_float
 from skimage.segmentation import mark_boundaries
 from skimage.feature import local_binary_pattern
-from skimage.color import rgb2gray, convert_colorspace
+from skimage.color import rgb2gray
 import joblib
 from sklearn.neighbors import KNeighborsClassifier
 

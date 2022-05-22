@@ -5,11 +5,8 @@ import matplotlib.pyplot as plt
 from skimage.segmentation import slic
 from skimage.util import img_as_float
 from skimage.segmentation import mark_boundaries
-from skimage.feature import local_binary_pattern
-from skimage.color import rgb2gray, convert_colorspace
 import joblib
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
 
 def loadPicture(dataset_path='./BoWFireDataset/train/'):
     images = []
@@ -65,7 +62,6 @@ class ColorComponent_Classfier:
             self.model = joblib.load(self.model_path)
         else:
             self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, weights='distance', metric='manhattan')
-            # self.model = GaussianNB()
 
     def Superpixel(self, sigma=5):
         # segments map
@@ -76,11 +72,10 @@ class ColorComponent_Classfier:
 
     def train(self, radius=1, n_points=8):
         self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, weights='distance', metric='manhattan')
-        # self.model = GaussianNB()
         X = []
         images, train_label = loadPicture(dataset_path=self.dataset_path)
 
-        print("Training Superpixel ColorSpace KNN...")
+        print("Training Color Component KNN...")
         Y = train_label
         for idx in range(len(images)):
             image = images[idx]
@@ -156,7 +151,7 @@ if __name__ == "__main__":
     # L = Extract_COLORSPACE_Feature(img)
     # print(len(L))
     # image_path = "./results/color/"
-    SC = ColorSpace_Classfier()
+    SC = ColorComponent_Classfier()
     SC.train()
     # SC.test(data_path=image_path)
     img = img_as_float(io.imread(image_path))
@@ -172,4 +167,4 @@ if __name__ == "__main__":
     plt.title('image and segments')
     plt.imshow(mark_boundaries(SC.image, SC.segments))
     # plt.imshow()
-    plt.savefig('this.png')
+    plt.savefig('./results/color/this.png')
