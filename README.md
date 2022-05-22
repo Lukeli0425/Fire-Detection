@@ -46,6 +46,13 @@ python test.py  --color_space [True/False]  --color_component [True/False]  --te
 
 
 
+## Train and Test together
+
+```zsh
+chmod +x run.sh
+./run.sh
+```
+
 ### Best Results
 
 [![OxjLaF.jpg](https://s1.ax1x.com/2022/05/22/OxjLaF.jpg)](https://imgtu.com/i/OxjLaF)
