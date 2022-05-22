@@ -14,8 +14,11 @@ class ColorSpace_Classifier:
         self.dataset_path = dataset_path
         self.model_path = model_path
         self.n_neighbors = n_neighbors
-        if os.path.exists(self.model_path):
+        try:
             self.model = joblib.load(self.model_path)
+            print('Successfully loaded ColorSpace model.')
+        except:
+            print("Warning: Failed loading ColorSpace model!")
 
     def train(self):
         self.model = GaussianNB()

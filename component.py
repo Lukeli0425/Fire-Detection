@@ -58,10 +58,12 @@ class ColorComponent_Classfier:
         self.m = m
         self.n_neighbors = n_neighbors
         self.max_bins = max_bins
-        if os.path.exists(model_path):
+        try:
             self.model = joblib.load(self.model_path)
-        else:
-            self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, weights='distance', metric='manhattan')
+            print('Successfully loaded ColorComponent model.')
+        except:
+            print("Warning: Failed loading ColorComponent model!")
+
 
     def Superpixel(self, sigma=5):
         # segments map

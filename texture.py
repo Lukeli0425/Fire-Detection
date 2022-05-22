@@ -54,8 +54,12 @@ class Texture_Classfier:
         self.m = m
         self.n_neighbors = n_neighbors
         self.max_bins = max_bins
-        if os.path.exists(self.model_path):
+        try:
             self.model = joblib.load(self.model_path)
+            print('Successfully loaded Texture model.')
+        except:
+            print("Warning: Failed loading Texture model!")
+
 
     def LBP(self):
         image_gray = rgb2gray(self.image)

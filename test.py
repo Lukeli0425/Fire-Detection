@@ -14,13 +14,13 @@ import pandas as pd
 def test(opt, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
     if opt.color_space=='True':
         CS = ColorSpace_Classifier(n_neighbors=7)
-        CS.train()
+        # CS.train()
     if opt.color_component=='True':
         CC = ColorComponent_Classfier(n_neighbors=9 ,method='default' , n_segments=100, max_bins=255, m=40)
-        CC.train()
+        # CC.train()
     if opt.texture=='True':
         TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=120, max_bins=255, m=40)
-        TC.train()
+        # TC.train()
 
     test_images = os.listdir(data_path)
     test_images.sort()
