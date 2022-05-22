@@ -1,6 +1,6 @@
 # Fire-Detection
 
-This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and t**exture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
+This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and **texture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
 
 ## Pipline
 
@@ -22,7 +22,7 @@ Train the models with
 python train.py
 ```
 
-The trained models will be saved under the 'models' folder.
+The trained models will be saved under the `models` folder.
 
 ## Test the Models
 
@@ -32,7 +32,7 @@ Test the models on the BoWFire Dataset with
 python test.py
 ```
 
-The default setting is to use all three classifiers together. The results will be saved under the 'results' folder. If you want to use certain classifiers, run:
+The default setting is to use all three classifiers together. The results will be saved under the `results`folder. If you want to use certain classifiers, run:
 
 ```zsh
 python test.py  --color_space [True/False]  --color_component [True/False]  --texture [True/False]
@@ -61,4 +61,3 @@ train.py                      # train the model
 test.py                       # test the model
 run.sh                        # train and test the model together
 ```
-
