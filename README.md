@@ -8,6 +8,12 @@ This is a _non-deep learning_ **fire detection** pipeline inspired by [_this pap
 
 ## Environment Setup
 
+Clone the code:
+
+```zsh
+git clone https://github.com/Lukeli0425/Fire-Detection.git
+```
+
 Install the required packages for this repo:
 
 ```zsh
