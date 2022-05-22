@@ -13,7 +13,7 @@ To train and test the model on the BoWFire Dataset:
 ```zsh
 python test.py
 ```
-The default settings is to use all three classifiers. The results will be saved in the 'results' folder. If you want to use choose certain classifiers, run
+The default setting is to use all three classifiers. The results will be saved in the 'results' folder. If you want to choose certain classifiers, run
 ```zsh
-python test.py  --color_space False  --color_component True  --texture True
+python test.py  --color_space [True/False]  --color_component [True/False]  --texture [True/False]
 ```
