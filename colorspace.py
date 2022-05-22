@@ -5,7 +5,7 @@ from sklearn.naive_bayes import GaussianNB
 from skimage.color import convert_colorspace
 import joblib
 
-class Color_Classifier:
+class ColorSpace_Classifier:
     def __init__(self, 
                  dataset_path='./BoWFireDataset/train/', 
                  model_path='./models/Color_Bayes.model', 
