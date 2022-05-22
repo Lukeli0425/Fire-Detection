@@ -54,7 +54,8 @@ class Texture_Classfier:
         self.m = m
         self.n_neighbors = n_neighbors
         self.max_bins = max_bins
-        self.model = joblib.load(self.model_path)
+        if os.path.exists(self.model_path):
+            self.model = joblib.load(self.model_path)
 
     def LBP(self):
         image_gray = rgb2gray(self.image)

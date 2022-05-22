@@ -43,7 +43,7 @@ def Extract_COLORSPACE_Feature(image,bins=255):
 class ColorComponent_Classfier:
     def __init__(self, 
                  dataset_path='./BoWFireDataset/train/',
-                 model_path='./models/ColorComponent.model',
+                 model_path='./models/ColorComponent_KNN.model',
                  n_neighbors=9,
                  method='default',
                  n_segments=100, 

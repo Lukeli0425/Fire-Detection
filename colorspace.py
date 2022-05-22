@@ -8,13 +8,14 @@ import joblib
 class ColorSpace_Classifier:
     def __init__(self, 
                  dataset_path='./BoWFireDataset/train/', 
-                 model_path='./models/Color_Bayes.model', 
+                 model_path='./models/Color_Space_Bayes.model', 
                  n_neighbors=11):
 
         self.dataset_path = dataset_path
         self.model_path = model_path
         self.n_neighbors = n_neighbors
-        self.model = joblib.load(self.model_path)
+        if os.path.exists(self.model_path):
+            self.model = joblib.load(self.model_path)
 
     def train(self):
         self.model = GaussianNB()
