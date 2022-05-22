@@ -42,27 +42,27 @@ def test(opt, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         mask = np.ones(img.shape)
 
         if opt.color_space=='True':
-            color_mask = CS.get_mask(img)
-            mask = mask*color_mask
-            img_color = img * color_mask
+            cs_mask = CS.get_mask(img)
+            mask = mask*cs_mask
+            img_cs = img * cs_mask
         else:
-            img_color = img
+            img_cs = img
 
         if opt.color_component=='True':
-            space_mask = CC.get_mask(img_color)
-            img_space = img_color * space_mask
-            mask = mask*space_mask
+            cc_mask = CC.get_mask(img_cs)
+            img_cc = img_cs * cc_mask
+            mask = mask*cc_mask
         else:
-            img_space = img_color
+            img_cc = img_cs
 
         if opt.texture=='True':
-            texture_mask = TC.get_mask(img_space)
-            mask = mask*texture_mask #* color_mask
-            img_texture = img_space * texture_mask
+            tc_mask = TC.get_mask(img_cc)
+            mask = mask*tc_mask #* cs_mask
+            img_tc = img_cc * tc_mask
         else:
-            img_texture = img_space
+            img_tc = img_cc
 
-        img_out = img_texture
+        img_out = img_tc
 
         img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
         img_save_path = os.path.join('./results/combined/', img_out_name)
@@ -74,20 +74,20 @@ def test(opt, data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
         plt.subplot(2,2,1)
         plt.imshow(img0)
         plt.axis('off')
-        plt.title('Original Image')
+        plt.title('0. Original Image')
         plt.subplot(2,2,2)
-        plt.imshow(img_color)
+        plt.imshow(img_cs)
         plt.axis('off')
-        plt.title('Color Mask')
+        plt.title('1. After ColorSpace Mask')
         plt.subplot(2,2,3)
-        plt.imshow(img_texture)
+        plt.imshow(img_tc)
         plt.axis('off')
-        plt.title('Texture Mask')
+        plt.title('2. After ColorComponent Mask')
         plt.subplot(2,2,4)
         plt.imshow(img_out)
         plt.axis('off')
-        plt.title('Fire Mask' + (' (fire)' if is_fire else ' (not fire)'))
-        plt.savefig(img_save_path)
+        plt.title('3. After Texture Mask ' + ('(fire)' if is_fire else '(not fire)'))
+        plt.savefig(img_save_path, bbox_inches='tight')
         plt.close()
 
         truth.append(1 if is_fire else 0)
