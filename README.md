@@ -2,6 +2,8 @@
 
 This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and t**exture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
 
+## Pipline
+
 [![OxD1l6.png](https://s1.ax1x.com/2022/05/22/OxD1l6.png)](https://imgtu.com/i/OxD1l6)
 
 ## Environment Setup
@@ -15,9 +17,11 @@ pip install -r requirements.txt
 ## Train the Models
 
 Train the models with
+
 ```zsh
 python train.py
 ```
+
 The trained models will be saved under the 'models' folder.
 
 ## Test the Models
@@ -33,6 +37,12 @@ The default setting is to use all three classifiers together. The results will b
 ```zsh
 python test.py  --color_space [True/False]  --color_component [True/False]  --texture [True/False]
 ```
+
+
+
+### Best Results
+
+[![OxjLaF.jpg](https://s1.ax1x.com/2022/05/22/OxjLaF.jpg)](https://imgtu.com/i/OxjLaF)
 
 ## File list
 
