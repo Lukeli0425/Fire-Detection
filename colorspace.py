@@ -1,9 +1,6 @@
 import os
 import skimage
 import numpy as np
-import random 
-import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from skimage.color import convert_colorspace
 import joblib
@@ -20,7 +17,6 @@ class Color_Classifier:
         self.model = joblib.load(self.model_path)
 
     def train(self):
-        # self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors, metric='manhattan')
         self.model = GaussianNB()
         train_images = os.listdir(self.dataset_path)
         if '.DS_Store' in train_images:
@@ -53,7 +49,6 @@ class Color_Classifier:
 
     def get_mask(self, img):
         """Generate fire mask of the input image with the saved KNN model trained by colar space mathod."""
-
         h,w,_ = img.shape
         img_ycbcr = convert_colorspace(img, 'rgb', 'ycbcr')
         prds = np.array(self.model.predict(img_ycbcr.reshape(-1,3)))
@@ -73,7 +68,6 @@ class Color_Classifier:
         test_images.sort()
         if '.DS_Store' in test_images:
             test_images.remove('.DS_Store')
-        # random.shuffle(test_images)
 
         idx = 0
         for img_name in test_images:
