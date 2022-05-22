@@ -1,6 +1,6 @@
 # Fire-Detection
 
-This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and t**exture classifier**. Our model was trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
+This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and t**exture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
 
 [![OxD1l6.png](https://s1.ax1x.com/2022/05/22/OxD1l6.png)](https://imgtu.com/i/OxD1l6)
 
@@ -38,8 +38,8 @@ python test.py  --color_space [True/False]  --color_component [True/False]  --te
 
 ```bash
 ...
-+ BoWFireDataset              # train and test Dataset
-+ models                      # models to be saved
++ BoWFireDataset              # train & test dataset
++ models                      # saved models
 + references                  # reference paper
 + results                     # experiment results
 README.md 
