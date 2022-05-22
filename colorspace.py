@@ -23,7 +23,7 @@ class Color_Classifier:
             train_images.remove('.DS_Store')
         X = [] # pixels
         Y = [] # labels
-        print("Training Color Bayes...")
+        print("Training Color Space Naive Bayes...")
         for img_name in train_images:
             img_path = os.path.join(self.dataset_path, img_name)
             img = skimage.io.imread(img_path)
@@ -62,8 +62,8 @@ class Color_Classifier:
 
     def test(self, fire_threshold=0.15, data_path='./BoWFireDataset/dataset/img/'):
         total_correct = 0
-        if not os.path.exists('./results/color/'):
-            os.mkdir('./results/color/')
+        if not os.path.exists('./results/colorspace/'):
+            os.mkdir('./results/colorspace/')
         test_images = os.listdir(data_path)
         test_images.sort()
         if '.DS_Store' in test_images:
@@ -80,7 +80,7 @@ class Color_Classifier:
             img_out = img
             img_out[mask==0] = 0
             img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
-            img_save_path = os.path.join('./results/color/', img_out_name)
+            img_save_path = os.path.join('./results/colorspace/', img_out_name)
             skimage.io.imsave(img_save_path, img_out.astype(np.uint8))
 
             is_fire = mask.sum()/h/w > fire_threshold

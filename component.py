@@ -102,8 +102,8 @@ class ColorComponent_Classfier:
 
     def test(self, data_path, fire_threshold=0.01):
         total_correct = 0
-        if not os.path.exists('./results/space/'):
-            os.mkdir('./results/space/')
+        if not os.path.exists('./results/component/'):
+            os.mkdir('./results/component/')
         test_images = os.listdir(data_path)
         test_images.sort()
         if '.DS_Store' in test_images:
@@ -118,7 +118,7 @@ class ColorComponent_Classfier:
             mask = self.get_mask(img)
             img_out = img * mask
             img_out_name = img_name[:-4] + '_out' + img_name[-4:] 
-            img_save_path = os.path.join('./results/texture/', img_out_name)
+            img_save_path = os.path.join('./results/component/', img_out_name)
             # io.imsave(img_save_path, img_out.astype(np.uint8))
 
             plt.figure(figsize=(10,5))
