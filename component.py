@@ -46,10 +46,10 @@ def Extract_COLORSPACE_Feature(image,bins=255):
 class ColorComponent_Classfier:
     def __init__(self, 
                  dataset_path='./BoWFireDataset/train/',
-                 model_path='./models/ColorSpace.model',
+                 model_path='./models/ColorComponent.model',
                  n_neighbors=9,
                  method='default',
-                 n_segments=150, 
+                 n_segments=100, 
                  m=40,
                  max_bins=255):
         self.dataset_path = dataset_path
@@ -87,7 +87,7 @@ class ColorComponent_Classfier:
             X.append(Extract_COLORSPACE_Feature(image=image,bins=255))
 
         self.model.fit(X, Y)
-        joblib.dump(self.model,'./models/ColorSpace.model')
+        joblib.dump(self.model,self.model_path)
 
     def get_mask(self, image):
         self.image = image

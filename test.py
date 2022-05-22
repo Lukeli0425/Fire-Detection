@@ -1,12 +1,11 @@
-from http.client import ImproperConnectionState
 import os
 import numpy as np
-import torch, cv2
-from CNN import CNN
-import random
+# import torch, cv2
+# from CNN import CNN
+# import random
 from skimage import io
 from skimage.util import img_as_float
-from torchvision import transforms
+# from torchvision import transforms
 from color import Color_Classifier
 from texture import Texture_Classfier
 from component import ColorComponent_Classfier
@@ -15,54 +14,54 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import pandas as pd
 
-def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/dataset/img/'):
-    model = CNN()
-    model = torch.load(model_path)
-    model.eval()
-    test_images = os.listdir(data_path)
-    if '.DS_Store' in test_images:
-        test_images.remove('.DS_Store')
-    random.shuffle(test_images)
+# def test_CNN(model_path='./models/fire_0.96.pkl', data_path='./BoWFireDataset/dataset/img/'):
+#     model = CNN()
+#     model = torch.load(model_path)
+#     model.eval()
+#     test_images = os.listdir(data_path)
+#     if '.DS_Store' in test_images:
+#         test_images.remove('.DS_Store')
+#     random.shuffle(test_images)
 
-    transform = transforms.ToTensor()
+#     transform = transforms.ToTensor()
 
-    total_correct = 0
-    for img_name in test_images:
-        img_path = os.path.join(data_path, img_name)
-        img = cv2.imread(img_path)
-        h,w,_ = img.shape
-        img = img[0:int(h/50)*50:,0:int(w/50)*50,:]
-        h,w,_ = img.shape
-        fire_num = 0
-        for i in range(0,int(h/50)):
-            for j in range(0,int(w/50)):
-                seg = img[50*i:50*(i+1),50*j:50*(j+1),:]
-                seg = transform(seg).unsqueeze(0)
+#     total_correct = 0
+#     for img_name in test_images:
+#         img_path = os.path.join(data_path, img_name)
+#         img = cv2.imread(img_path)
+#         h,w,_ = img.shape
+#         img = img[0:int(h/50)*50:,0:int(w/50)*50,:]
+#         h,w,_ = img.shape
+#         fire_num = 0
+#         for i in range(0,int(h/50)):
+#             for j in range(0,int(w/50)):
+#                 seg = img[50*i:50*(i+1),50*j:50*(j+1),:]
+#                 seg = transform(seg).unsqueeze(0)
 
-                predict_y = model(seg.float()).detach()
-                predict_label = np.argmax(predict_y, axis=-1)
+#                 predict_y = model(seg.float()).detach()
+#                 predict_label = np.argmax(predict_y, axis=-1)
 
-                if predict_label == 0:
-                    fire_num += 1
-        fire_rate = fire_num/int(h/50)/int(w/50)
-        is_fire = (fire_rate > 0.03) and (fire_rate < 0.35)
+#                 if predict_label == 0:
+#                     fire_num += 1
+#         fire_rate = fire_num/int(h/50)/int(w/50)
+#         is_fire = (fire_rate > 0.03) and (fire_rate < 0.35)
 
-        print(img_name, fire_num, int(h/50)*int(w/50),  is_fire)
-        if img_name[0] == 'f' and is_fire:
-            total_correct += 1
-        elif img_name[0] == 'n' and (not is_fire):
-            total_correct += 1
+#         print(img_name, fire_num, int(h/50)*int(w/50),  is_fire)
+#         if img_name[0] == 'f' and is_fire:
+#             total_correct += 1
+#         elif img_name[0] == 'n' and (not is_fire):
+#             total_correct += 1
 
-    acc = total_correct/len(test_images)
-    print('accuracy: {:.2f}'.format(acc))
+#     acc = total_correct/len(test_images)
+#     print('accuracy: {:.2f}'.format(acc))
     
 def test(data_path='./BoWFireDataset/dataset/img/', fire_threshold=0.01):
 
     CC = Color_Classifier(n_neighbors=7)
     CC.train()
-    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=130, max_bins=255, m=40)
+    TC = Texture_Classfier(n_neighbors=7, method='default', n_segments=120, max_bins=255, m=40)
     TC.train()
-    SC = ColorComponent_Classfier()
+    SC = ColorComponent_Classfier(n_neighbors=9 ,method='default' , n_segments=100, max_bins=255, m=40)
     SC.train()
     test_images = os.listdir(data_path)
     test_images.sort()
