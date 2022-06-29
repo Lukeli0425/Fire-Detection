@@ -1,6 +1,6 @@
 # Fire-Detection
 
-This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). The pipeline can be divided into three parts: **color space classifier**, **color component classifier** and **texture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/).
+This is a _non-deep learning_ **fire detection** pipeline inspired by [_this paper_](https://ieeexplore.ieee.org/abstract/document/7314551). Our method comprises of three parts: **color space classifier**, **color component classifier** and **texture classifier**. Our models were trained and tested on the [_BoWFire Dataset_](https://bitbucket.org/gbdi/bowfire-dataset/src/master/) and is able to detect fire from static images with an accuracy of 80%.
 
 ## Pipline
 
