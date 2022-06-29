@@ -100,6 +100,6 @@ class ColorSpace_Classifier:
 
 
 if __name__ == "__main__":
-    CC = Color_Classifier()
+    CC = ColorSpace_Classifier()
     CC.train()
     CC.test()
